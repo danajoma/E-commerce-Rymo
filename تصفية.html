@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Register + Filters</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding-top: 50px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 400px;
+      width: 100%;
+    }
+    .auth-box, .filter-box {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+    .auth-box h2 {
+      margin-bottom: 20px;
+      color: #fd7e14;
+      text-align: center;
+    }
+    .auth-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .auth-box button, .filter-box button {
+      width: 100%;
+      padding: 12px;
+      background-color: #fd7e14;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .auth-box button:hover, .filter-box button:hover {
+      background-color: #e6690d;
+    }
+    .greeting {
+      font-size: 20px;
+      color: #28a745;
+      font-weight: bold;
+      text-align: center;
+    }
+    .filter-box h3 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .filter-box select,
+    .filter-box input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="auth-box" id="auth-box">
+      <h2>Login / Register</h2>
+      <input type="text" id="username" placeholder="Enter your name">
+      <button onclick="saveUser()">Continue</button>
+    </div>
+
+    <div class="auth-box" id="greeting-box" style="display:none;">
+      <p class="greeting" id="greeting-message"></p>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="filter-box">
+      <h3>Filter Products</h3>
+      <select id="category">
+        <option value="">All Categories</option>
+        <option value="shoes">Shoes</option>
+        <option value="bags">Bags</option>
+        <option value="clothes">Clothes</option>
+      </select>
+      <select id="brand">
+        <option value="">All Brands</option>
+        <option value="nike">Nike</option>
+        <option value="adidas">Adidas</option>
+        <option value="zara">Zara</option>
+      </select>
+      <input type="number" id="minPrice" placeholder="Min Price">
+      <input type="number" id="maxPrice" placeholder="Max Price">
+      <button onclick="applyFilters()">Apply Filters</button>
+    </div>
+  </div>
+
+  <script>
+    function saveUser() {
+      const username = document.getElementById('username').value.trim();
+      if (username) {
+        localStorage.setItem('username', username);
+        showGreeting(username);
+      }
+    }
+
+    function showGreeting(name) {
+      document.getElementById('auth-box').style.display = 'none';
+      document.getElementById('greeting-box').style.display = 'block';
+      document.getElementById('greeting-message').innerText = `Welcome, ${name}!`;
+    }
+
+    function logout() {
+      localStorage.removeItem('username');
+      document.getElementById('auth-box').style.display = 'block';
+      document.getElementById('greeting-box').style.display = 'none';
+    }
+
+    function applyFilters() {
+      const category = document.getElementById('category').value;
+      const brand = document.getElementById('brand').value;
+      const minPrice = document.getElementById('minPrice').value;
+      const maxPrice = document.getElementById('maxPrice').value;
+
+      const params = new URLSearchParams();
+      if (category) params.append('category', category);
+      if (brand) params.append('brand', brand);
+      if (minPrice) params.append('minPrice', minPrice);
+      if (maxPrice) params.append('maxPrice', maxPrice);
+
+      window.location.href = `shop.html?${params.toString()}`;
+    }
+
+    window.onload = function () {
+      const storedName = localStorage.getItem('username');
+      if (storedName) {
+        showGreeting(storedName);
+      }
+    }
+  </script>
+</body>
+
+</html>
